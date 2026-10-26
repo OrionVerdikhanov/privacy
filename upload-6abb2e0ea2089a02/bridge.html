@@ -1,0 +1,17 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>apk-bridge</title>
+<script>
+/* временный мост game-factory (apk-bridge.mjs): файл со своего адреса – консоли магазина через postMessage */
+(async function () {
+  var target = "https://play.google.com"
+  try {
+    var r = await fetch("ekonomstrana-1.0.1.aab", { cache: 'no-store' })
+    if (!r.ok) throw new Error('HTTP ' + r.status)
+    var buf = await r.arrayBuffer()
+    parent.postMessage({ kind: 'apk-bridge', name: "ekonomstrana-1.0.1.aab", buf: buf }, target, [buf])
+  } catch (e) {
+    parent.postMessage({ kind: 'apk-bridge', error: String(e) }, target)
+  }
+})()
+</script>
